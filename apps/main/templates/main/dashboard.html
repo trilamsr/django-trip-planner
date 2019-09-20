@@ -1,0 +1,118 @@
+{% extends 'main/__base__.html' %}
+
+{% block content %}
+<div class="container">
+    <header class="row" style="margin-bottom: 4rem;">
+        <div>
+            <h1>
+                Hello {{user.first | title}}!
+            </h1>
+            <div>
+                <a href="/logout">Log Out</a>
+            </div>
+        </div>
+    </header>
+    <div class="messages">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning">{{message}}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <main>
+        <div>
+            <a href="/create_trip" class="btn btn-primary form-control">Create a new trip!</a>
+        </div>
+        <br>
+        <section>
+            <h3>Your trips:</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Destination</th>
+                        <th scope="col">Start Dates</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Plan</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for trip in user.trips_attending.all%}
+                    <tr>
+                        <td scope='row'>
+                            <a href="/trips/edit/{{trip.id}}">
+                                {{trip.destination}}
+                            </a>
+                        </td>
+                        <td>{{trip.start_date}}</td>
+                        <td>{{trip.end_date}}</td>
+                        <td>{{trip.plan}}</td>
+                        <td class="row">
+                            <form action="/trips/remove/{{trip.id}}" class="col-6" method="POST">
+                                {%csrf_token%}
+                                <input type="hidden" value="{{trip.id}}">
+                                <button type="submit" class="btn btn-warning form-control">Unattend</button>
+                            </form>
+                            {%if user.id == trip.created_by.id %}
+                            <a href="/trips/edit/{{trip.id}}" class="btn btn-warning col-6 form-control">Edit</a>
+                            {%else%}
+                            <a href="/trips/edit/{{trip.id}}" class="btn btn-info col-6 form-control">View</a>
+                            {%endif%}
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h3>Available trips:</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Destination</th>
+                        <th>Start Dates</th>
+                        <th>End Date</th>
+                        <th>Plan</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in alltrips %}
+                    {% if user not in trip.attendees.all %}
+                    <tr>
+                        <td>
+                            <a href="/trips/edit/{{trip.id}}">
+                                {{trip.destination}}
+                            </a>
+                        </td>
+                        <td>{{trip.start_date}}</td>
+                        <td>{{trip.end_date}}</td>
+                        <td>{{trip.plan}}</td>
+                        <td class="row">
+                            <form action="/add_attendee" method="POST" class="col-6">
+                                {%csrf_token%}
+                                <input type="hidden" value='{{trip.id}}' name='trip_id'>
+                                <button type="submit" class="btn btn-primary form-control">Attend</button>
+                            </form>
+                            {%if trip.created_by.id == user.id%}
+                            <a href="/trips/edit/{{trip.id}}" class="btn btn-warning col-6 form-control">Edit</a>
+                            {%else%}
+                            <a href="/trips/edit/{{trip.id}}" class="btn btn-info col-6 form-control">View</a>
+                            {%endif%}
+
+                        </td>
+                    </tr>
+                    {%endif%}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+
+
+
+
+
+    </main>
+</div>
+{% endblock content %}

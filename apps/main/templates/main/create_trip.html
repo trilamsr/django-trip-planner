@@ -1,0 +1,50 @@
+{% extends 'main/__base__.html' %}
+
+{% block content %}
+<div class="container">
+    <header style="margin-bottom: 4rem;">
+        <div>
+            <h1>
+                Hello {{user.first | title}}! Create a trip!
+            </h1>
+        </div>
+        <div>
+            <a href="/logout">Log Out</a>
+        </div>
+    </header>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning">{{message}}</div>
+    {% endfor %}
+    {% endif %}
+    <main>
+        <form action="create_trip" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="new_destination">Destination</label>
+                <input type="text" class="form-control" id="new_destination" name="new_destination" value="{{new_destination}}">
+            </div>
+            <div class="form-group">
+                <label for="new_start_date">Start Date</label>
+                <input type="date" class="form-control" id="new_start_date" name="new_start_date" value="{{new_start_date}}">
+            </div>
+
+            <div class="form-group">
+                <label for="new_end_date">Start Date</label>
+                <input type="date" class="form-control" id="new_end_date" name="new_end_date" value="{{new_end_date}}">
+            </div>
+            <div>
+                <label for="new_plan">Plan</label>
+                <textarea name="new_plan" id="new_plan" class="form-control" rows="5">{{new_plan}}</textarea>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary form-control">Submit</button>
+            <br>
+            <a href="/" class="btn btn-warning form-control">Cancel</a>
+        </form>
+    </main>
+
+
+
+</div>
+{% endblock content %}

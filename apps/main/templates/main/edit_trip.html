@@ -1,0 +1,119 @@
+{% extends 'main/__base__.html' %}
+
+{% block content %}
+<div class="container">
+    <header style="margin-bottom: 4rem;">
+        <div>
+            <h1>
+
+                {% if user.id == trip.created_by.id %}
+                Hello {{user.first | title}}! Let's edit your trip!
+                {%else%}
+                Hello {{user.first | title}}! Let's check out this trip!
+                {%endif%}
+
+            </h1>
+        </div>
+        <div>
+            <a href="/logout">Log Out</a>
+        </div>
+    </header>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning">{{message}}</div>
+    {% endfor %}
+    {% endif %}
+
+
+    <main>
+        {% if user.id == trip.created_by.id %}
+        <form action="/trips/edit/{{trip.id}}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="new_destination">Destination</label>
+                <input type="text" class="form-control" id="new_destination" name="new_destination"
+                    value="{{trip.destination}}">
+            </div>
+            <div class="form-group">
+                <label for="new_start_date">Start Date</label>
+                <input type="date" class="form-control" id="new_start_date" name="new_start_date"
+                    value="{{trip.start_date | date:'Y-m-d'}}">
+            </div>
+
+            <div class="form-group">
+                <label for="new_end_date">Start Date</label>
+                <input type="date" class="form-control" id="new_end_date" name="new_end_date"
+                    value="{{trip.end_date | date:'Y-m-d'}}">
+            </div>
+            <div>
+                <label for="new_plan">Plan</label>
+                <textarea name="new_plan" id="new_plan" class="form-control" rows="5">{{trip.plan}}</textarea>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary form-control">Submit</button>
+            <br>
+            <a href="/" class="btn btn-warning form-control">Cancel</a>
+        </form>
+        <form action="/cancel_trip" method="POST">
+            {% csrf_token%}
+            <input type="hidden" value="{{trip.id}}" name="cancel_trip_id">
+            <button type="submit" class="btn btn-danger form-control">Cancel Trip</button>
+        </form>
+
+
+
+
+        {% else %}
+        <table class="table">
+            <tr>
+                <th>Destination</th>
+                <td>{{trip.destination}}</td>
+            </tr>
+            <tr>
+                <th>Start Date</th>
+                <td>{{trip.start_date}}</td>
+            </tr>
+            <tr>
+                <th>End Date</th>
+                <td>{{trip.end_date}}</td>
+            </tr>
+            <tr>
+                    <th>Created by</th>
+                    <td>{{trip.created_by.first | title}} {{trip.created_by.last | title}}</td>
+                </tr>
+            <tr>
+                <th>Created on:</th>
+                <td>{{trip.created_at}}</td>
+            </tr>
+            <tr>
+                <th>Last Updated</th>
+                <td>{{trip.updated_at}}</td>
+            </tr>
+            <tr>
+                <th>Plan</th>
+                <td>{{trip.plan}}</td>
+            </tr>
+        </table>
+        {% endif %}
+
+
+        <br><br>
+        <section>
+            <h4>Currently in attendance:</h4>
+            <ul>
+            {% for people in trip.attendees.all %}
+                {% if people.id != trip.created_by.id%}
+                <li>
+                    {{people.first}} {{people.last}}
+                </li>
+                {%endif%}
+                {% endfor %}
+            </ul>
+        </section>
+
+
+
+    </main>
+
+</div>
+{% endblock content %}

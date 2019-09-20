@@ -1,0 +1,85 @@
+{% extends 'main/__base__.html' %}
+{% block content %}
+
+
+
+
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning">{{message}}</div>
+    {% endfor %}
+    {% endif %}
+    <header>
+        <h1>
+            Welcome! Let's travel!
+        </h1>
+    </header>
+
+
+    <main class="jumbotron row">
+        <section class="col-6">
+            <div class="text-center">
+                <h3>
+                    Registration
+                </h3>
+            </div>
+            <form action="/register" method="POST">
+                {%csrf_token%}
+                <div class="form-group">
+                    <label for="reg_first_name">First Name</label>
+                    <input type="text" class="form-control" id="reg_first_name" name="reg_first_name">
+                </div>
+                <div class="form-group">
+                    <label for="reg_last_name">Last Name</label>
+                    <input type="text" class="form-control" id="reg_last_name" name="reg_last_name">
+                </div>
+                <div class="form-group">
+                    <label for="reg_email">Email</label>
+                    <input type="text" class="form-control" id="reg_email" name="reg_email">
+                </div>
+                <div class="form-group">
+                    <label for="reg_birthday">Birthdate</label>
+                    <input type="date" class="form-control" id="reg_birthday" name="reg_birthday">
+                </div>
+
+                <div class="form-group">
+                    <label for="reg_password">Password</label>
+                    <input type="password" class="form-control" id="reg_password" name="reg_password">
+                </div>
+                <div class="form-group">
+                    <label for="reg_password_confirm">Confirm Password</label>
+                    <input type="password" class="form-control" id="reg_password_confirm" name="reg_password_confirm">
+                </div>
+                <button type="submit" class="form-control btn btn-primary">Register</button>
+            </form>
+        </section>
+
+
+        <section class="col-6">
+            <div class="text-center">
+                <h3>
+                    Login
+                </h3>
+            </div>
+            <form action="/login" method="POST">
+                {%csrf_token%}
+                <div class="form-group">
+                    <label for="login_email">Email</label>
+                    <input type="text" class="form-control" id="login_email" name="login_email">
+                </div>
+
+                <div class="form-group">
+                    <label for="login_password">Password</label>
+                    <input type="password" class="form-control" id="login_password" name="login_password">
+                </div>
+                <button type="submit" class="btn btn-primary form-control">Log In</button>
+            </form>
+        </section>
+    </main>
+</div>
+
+
+
+
+{% endblock content %}
